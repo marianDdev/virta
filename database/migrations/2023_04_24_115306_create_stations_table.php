@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('stations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id');
+            $table->string('name');
+            $table->float('latitude');
+            $table->float('longitude');
+            $table->text('address');
             $table->timestamps();
         });
     }

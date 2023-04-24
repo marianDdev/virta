@@ -33,4 +33,9 @@ class Company extends Model
     {
         return $this->children()->with('grandchildren');
     }
+
+    public function stations(): HasMany
+    {
+        return $this->hasMany(Station::class);
+    }
 }
