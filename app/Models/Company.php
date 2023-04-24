@@ -10,8 +10,10 @@ use Illuminate\Support\Collection;
 
 /**
  * @property Collection $children
-
  * @property Collection $grandchildren
+ * @property Collection $stations
+ * @property Collection $childrenStations
+ * @property Collection $grandchildrenStations
  */
 class Company extends Model
 {

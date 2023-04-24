@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id');
             $table->string('name');
-            $table->float('latitude');
-            $table->float('longitude');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 10, 7);
             $table->text('address');
             $table->timestamps();
         });

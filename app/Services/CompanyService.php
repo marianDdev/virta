@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Company;
 use Illuminate\Http\JsonResponse;
 
-class CompanyService
+class CompanyService implements CompanyServiceInterface
 {
     public function getOneById(int $id): Company|JsonResponse
     {
@@ -24,7 +24,7 @@ class CompanyService
 
         if ($children->count() > 0) {
             foreach ($children as $company) {
-                $company->update(['parent_company_id' =>  null]);
+                $company->update(['parent_company_id' => null]);
             }
         }
     }

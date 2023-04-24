@@ -10,8 +10,10 @@ use Illuminate\Support\Collection;
 /**
  * @property string     $name
  * @property Collection $grandChildren
+ * @property Collection $children
  * @property integer    $parent_company_id
  * @property Company    $parent
+ * @property Collection      $stations
  */
 class CompanyResource extends JsonResource
 {
@@ -25,7 +27,9 @@ class CompanyResource extends JsonResource
         return [
             'name'     => $this->name,
             'parent'   => $this->parent->name ?? null,
-            'children' => $this->grandChildren,
+            'children' => $this->children,
+            'grandchildren' => $this->grandChildren,
+            'stations' => $this->stations
         ];
     }
 }
