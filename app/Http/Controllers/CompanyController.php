@@ -44,7 +44,7 @@ class CompanyController extends Controller
     public function delete(CompanyService $service, int $id): JsonResponse
     {
         $company = $service->getOneById($id);
-        $service->removeParentCompany($id);
+        $service->removeParentCompany($company);
         $company->delete();
 
         return response()->json('Company successfully deleted.');
