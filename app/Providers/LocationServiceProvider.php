@@ -3,20 +3,17 @@
 namespace App\Providers;
 
 use App\Services\LocationService;
-use App\Services\StationService;
 use Illuminate\Support\ServiceProvider;
 
-class StationServiceProvider extends ServiceProvider
+class LocationServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->app->bind('App\Services\StationServiceInterface', function () {
-            $locationService = new LocationService();
-
-            return new StationService($locationService);
+        $this->app->bind('App\Services\LocationServiceInterface', function () {
+            return new LocationService();
         });
     }
 
