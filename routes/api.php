@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\StationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +18,21 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     ['prefix' => '/companies'],
     function () {
-        Route::get('/', [CompanyController::class, 'index'])->name('companies.index');
-        Route::get('/{id}', [CompanyController::class, 'getOne'])->name('companies.getOne');
-        Route::post('/', [CompanyController::class, 'create'])->name('companies.create');
-        Route::patch('/{id}', [CompanyController::class, 'update'])->name('companies.update');
-        Route::delete('/{id}', [CompanyController::class, 'delete'])->name('companies.delete');
+        Route::get('/', [CompanyController::class, 'index']);
+        Route::get('/{id}', [CompanyController::class, 'getOne']);
+        Route::post('/', [CompanyController::class, 'create']);
+        Route::patch('/{id}', [CompanyController::class, 'update']);
+        Route::delete('/{id}', [CompanyController::class, 'delete']);
+    }
+);
+
+Route::group(
+    ['prefix' => '/stations'],
+    function () {
+        Route::get('/', [StationController::class, 'index']);
+        Route::get('/{id}', [StationController::class, 'getOne']);
+        Route::post('/', [StationController::class, 'create']);
+        Route::patch('/{id}', [StationController::class, 'update']);
+        Route::delete('/{id}', [StationController::class, 'delete']);
     }
 );

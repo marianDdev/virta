@@ -10,8 +10,10 @@ use Illuminate\Support\Collection;
 
 /**
  * @property Collection $children
-
  * @property Collection $grandchildren
+ * @property Collection $stations
+ * @property Collection $childrenStations
+ * @property Collection $grandchildrenStations
  */
 class Company extends Model
 {
@@ -32,5 +34,10 @@ class Company extends Model
     public function grandchildren(): HasMany
     {
         return $this->children()->with('grandchildren');
+    }
+
+    public function stations(): HasMany
+    {
+        return $this->hasMany(Station::class);
     }
 }
