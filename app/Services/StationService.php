@@ -8,13 +8,6 @@ use Illuminate\Support\Collection;
 
 class StationService implements StationServiceInterface
 {
-    private LocationServiceInterface $locationService;
-
-    public function __construct(LocationServiceInterface $locationService)
-    {
-        $this->locationService = $locationService;
-    }
-
     public function list(array $filters): Collection
     {
         $locationFilters      = ['latitude', 'longitude', 'radius'];
@@ -24,14 +17,16 @@ class StationService implements StationServiceInterface
             $company = Company::find($filters['company_id']);
 
             return $query->whereIn('company_id', $this->getIds($company));
-        })
-                      ->when($locationFiltersExist, function ($query) use ($filters) {
-                          $coordinatesRanges = $this->locationService->calculateLocation($filters['latitude'], $filters['longitude'], $filters['radius']);
+        })->when($locationFiltersExist, function ($query) use ($filters) {
+            $haversine = $this->getHaversine($filters);
 
-                          return $query->whereBetween('latitude', $coordinatesRanges['lat'])
-                                       ->whereBetween('longitude', $coordinatesRanges['long']);
-                      })
-                      ->get();
+            return $query->select('*')
+                         ->selectRaw("$haversine AS distance")
+                         ->having("distance", "<=", $filters['radius'])
+                         ->orderby("distance", "asc");
+        })
+                      ->get()
+                      ->groupBy("address");
     }
 
     private function getIds(Company $company): array
@@ -42,5 +37,21 @@ class StationService implements StationServiceInterface
         }
 
         return $ids;
+    }
+
+    /**
+     * The haversine formula determines the great-circle distance between two points on a sphere
+     * given their longitudes and latitudes
+     */
+    private function getHaversine(array $filters): string
+    {
+        return "(
+        6371 * acos(
+            cos(radians(" . $filters['latitude'] . "))
+            * cos(radians(`latitude`))
+            * cos(radians(`longitude`) - radians(" . $filters['longitude'] . "))
+            + sin(radians(" . $filters['latitude'] . ")) * sin(radians(`latitude`))
+            )
+        )";
     }
 }

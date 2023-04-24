@@ -14,9 +14,8 @@ class StationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind('App\Services\StationServiceInterface', function () {
-            $locationService = new LocationService();
 
-            return new StationService($locationService);
+            return new StationService();
         });
     }
 
