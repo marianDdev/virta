@@ -18,9 +18,9 @@ class CompanyService
         return $company;
     }
 
-    public function removeParentCompany(int $parentId): void
+    public function removeParentCompany(Company $company): void
     {
-        $children = Company::where('parent_company_id', $parentId)->get();
+        $children = $company->children;
 
         if ($children->count() > 0) {
             foreach ($children as $company) {
