@@ -6,6 +6,7 @@ use App\Http\Requests\ListStationsRequest;
 use App\Http\Requests\StoreStationRequest;
 use App\Http\Requests\UpdateStationRequest;
 use App\Http\Resources\StationResource;
+use App\Http\Resources\StationResourceCollection;
 use App\Models\Station;
 use App\Services\StationServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -13,16 +14,18 @@ use Illuminate\Support\Collection;
 
 class StationController extends Controller
 {
-    public function index(ListStationsRequest $request, StationServiceInterface $service): Collection
+    public function index(ListStationsRequest $request, StationServiceInterface $service): StationResourceCollection
     {
         $validated = $request->validated();
 
-        return $service->list($validated);
+        return new StationResourceCollection($service->list($validated));
     }
 
-    public function getOne(StationServiceInterface $service, int $id): Station|JsonResponse
+    public function getOne(StationServiceInterface $service, int $id): StationResource
     {
-        return $service->getOneById($id);
+        $station =  $service->getOneById($id);
+
+        return new StationResource($station);
     }
 
     public function create(StoreStationRequest $request): JsonResponse
