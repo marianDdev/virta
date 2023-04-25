@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Controllers\StationController;
 use App\Http\Requests\ListStationsRequest;
+use App\Http\Resources\StationResourceCollection;
 use App\Services\StationServiceInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
@@ -82,7 +83,7 @@ class StationServiceTest extends TestCase
                        ->with($filters)
                        ->willReturn($allStations);
 
-        self::assertEquals($allStations, (new StationController())->index($request, $stationService));
+        self::assertEquals(new StationResourceCollection($allStations), (new StationController())->index($request, $stationService));
     }
 
     /**
@@ -135,7 +136,7 @@ class StationServiceTest extends TestCase
                        ->with($companyIdFilter)
                        ->willReturn($filteredByCompanyId);
 
-        self::assertEquals($filteredByCompanyId, (new StationController())->index($requestWithCompanyId, $stationService));
+        self::assertEquals(new StationResourceCollection($filteredByCompanyId), (new StationController())->index($requestWithCompanyId, $stationService));
     }
 
     /**
@@ -203,7 +204,7 @@ class StationServiceTest extends TestCase
                        ->with($coordinatesFilters)
                        ->willReturn($filteredByCoordinates);
 
-        self::assertEquals($filteredByCoordinates, (new StationController())->index($requestWithCoordinates, $stationService));
+        self::assertEquals(new StationResourceCollection($filteredByCoordinates), (new StationController())->index($requestWithCoordinates, $stationService));
     }
 
     /**
@@ -225,6 +226,6 @@ class StationServiceTest extends TestCase
                        ->with($companyIdFilter)
                        ->willReturn(collect([]));
 
-        self::assertEquals(collect([]), (new StationController())->index($requestNoStations, $stationService));
+        self::assertEquals(new StationResourceCollection(collect([])), (new StationController())->index($requestNoStations, $stationService));
     }
 }
