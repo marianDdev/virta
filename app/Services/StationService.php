@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Company;
 use App\Models\Station;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 class StationService implements StationServiceInterface
@@ -27,6 +28,17 @@ class StationService implements StationServiceInterface
         })
                       ->get()
                       ->groupBy("address");
+    }
+
+    public function getOneById(int $id): Station|JsonResponse
+    {
+        $station = Station::find($id);
+
+        if (is_null($station)) {
+            return response()->json('Station not found.', 404);
+        }
+
+        return $station;
     }
 
     private function getIds(Company $company): array

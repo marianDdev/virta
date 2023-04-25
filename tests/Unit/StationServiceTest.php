@@ -3,15 +3,19 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\StationController;
+use App\Http\Requests\ListStationsRequest;
 use App\Services\StationServiceInterface;
-use Illuminate\Http\Request;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 class StationServiceTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     public function test_get_all_stations(): void
     {
-        $filters =   [];
+        $filters = [];
 
         $allStations = collect(
             [
@@ -27,7 +31,7 @@ class StationServiceTest extends TestCase
                         "updated_at" => "2023-04-24T00:00:00.000000Z",
                     ],
                 ],
-               [
+                [
                     [
                         "id"         => 19,
                         "company_id" => 1,
@@ -62,18 +66,18 @@ class StationServiceTest extends TestCase
                         "created_at" => "2023-04-24T00:00:00.000000Z",
                         "updated_at" => "2023-04-24T00:00:00.000000Z",
                     ],
-                ]
+                ],
             ]
         );
 
-        $request = self::createMock(Request::class);
+        $request = self::createMock(ListStationsRequest::class);
         $request->expects(self::once())
-                ->method('all')
+                ->method('validated')
                 ->willReturn($filters);
 
 
         $stationService = self::createMock(StationServiceInterface::class);
-        $stationService->expects(self::once(2))
+        $stationService->expects(self::once())
                        ->method('list')
                        ->with($filters)
                        ->willReturn($allStations);
@@ -81,9 +85,12 @@ class StationServiceTest extends TestCase
         self::assertEquals($allStations, (new StationController())->index($request, $stationService));
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_get_stations_by_company_id(): void
     {
-        $companyIdFilter =   ['company_id' => 1];
+        $companyIdFilter = ['company_id' => 1];
 
         $filteredByCompanyId = collect(
             [
@@ -97,7 +104,7 @@ class StationServiceTest extends TestCase
                         "address"    => "75986 Beatty Lights\nEast Twilaburgh, CO 68441",
                         "created_at" => "2023-04-24T00:00:00.000000Z",
                         "updated_at" => "2023-04-24T00:00:00.000000Z",
-                        "distance" => 129.75697962743638
+                        "distance"   => 129.75697962743638,
                     ],
                 ],
                 "205 Parker Shoals Apt. 607\nNorth Anatown, OH 90505-4308" => [
@@ -116,14 +123,14 @@ class StationServiceTest extends TestCase
             ]
         );
 
-        $requestWithCompanyId = self::createMock(Request::class);
+        $requestWithCompanyId = self::createMock(ListStationsRequest::class);
         $requestWithCompanyId->expects(self::once())
-                             ->method('all')
-                             ->willReturn( $companyIdFilter);
+                             ->method('validated')
+                             ->willReturn($companyIdFilter);
 
 
         $stationService = self::createMock(StationServiceInterface::class);
-        $stationService->expects(self::once(2))
+        $stationService->expects(self::once())
                        ->method('list')
                        ->with($companyIdFilter)
                        ->willReturn($filteredByCompanyId);
@@ -131,12 +138,15 @@ class StationServiceTest extends TestCase
         self::assertEquals($filteredByCompanyId, (new StationController())->index($requestWithCompanyId, $stationService));
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_get_stations_by_coordinates(): void
     {
-        $coordinatesFilters =   [
-            'latitude' => 55,
+        $coordinatesFilters = [
+            'latitude'  => 55,
             'longitude' => 100,
-            'radius' => 444
+            'radius'    => 444,
         ];
 
         $filteredByCoordinates = collect(
@@ -151,7 +161,7 @@ class StationServiceTest extends TestCase
                         "address"    => "75986 Beatty Lights\nEast Twilaburgh, CO 68441",
                         "created_at" => "2023-04-24T00:00:00.000000Z",
                         "updated_at" => "2023-04-24T00:00:00.000000Z",
-                        "distance" => 129.75697962743638
+                        "distance"   => 129.75697962743638,
                     ],
                 ],
                 "205 Parker Shoals Apt. 607\nNorth Anatown, OH 90505-4308" => [
@@ -182,10 +192,10 @@ class StationServiceTest extends TestCase
         );
 
 
-        $requestWithCoordinates = self::createMock(Request::class);
+        $requestWithCoordinates = self::createMock(ListStationsRequest::class);
         $requestWithCoordinates->expects(self::once())
-                ->method('all')
-                ->willReturn($coordinatesFilters);
+                               ->method('validated')
+                               ->willReturn($coordinatesFilters);
 
         $stationService = self::createMock(StationServiceInterface::class);
         $stationService->expects(self::once())
@@ -196,14 +206,17 @@ class StationServiceTest extends TestCase
         self::assertEquals($filteredByCoordinates, (new StationController())->index($requestWithCoordinates, $stationService));
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_get_no_stations(): void
     {
-        $companyIdFilter =   ['company_id' => 10];
+        $companyIdFilter = ['company_id' => 10];
 
-        $requestNoStations = self::createMock(Request::class);
+        $requestNoStations = self::createMock(ListStationsRequest::class);
         $requestNoStations->expects(self::once())
-                               ->method('all')
-                               ->willReturn(['company_id' => 10]);
+                          ->method('validated')
+                          ->willReturn(['company_id' => 10]);
 
 
         $stationService = self::createMock(StationServiceInterface::class);
