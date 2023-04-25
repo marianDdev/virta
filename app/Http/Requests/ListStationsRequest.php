@@ -6,7 +6,7 @@ use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateStationRequest extends FormRequest
+class ListStationsRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,10 +17,9 @@ class UpdateStationRequest extends FormRequest
     {
         return [
             'company_id' => ['nullable', 'integer', Rule::exists(Company::class, 'id')],
-            'name'       => ['nullable', 'string', 'max:256'],
-            'latitude'   => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude'  => ['nullable', 'numeric', 'between:-180,180'],
-            'address'    => ['nullable', 'string'],
+            'latitude'   => ['required_with:longitude,radius', 'numeric', 'between:-90,90'],
+            'longitude'  => ['required_with:latitude,radius', 'numeric', 'between:-180,180'],
+            'radius'     => ['required_with:latitude,longitude', 'numeric'],
         ];
     }
 

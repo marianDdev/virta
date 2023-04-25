@@ -20,6 +20,7 @@ class StoreStationRequest extends FormRequest
             'name'       => ['required', 'string', 'max:256'],
             'latitude'   => ['required', 'numeric', 'between:-90,90'],
             'longitude'  => ['required', 'numeric', 'between:-180,180'],
+            'address'    => ['required', 'string'],
         ];
     }
 
