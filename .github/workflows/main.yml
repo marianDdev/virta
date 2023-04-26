@@ -1,7 +1,7 @@
-name: fuelingphp-laravel-cd
+name: virta-cd
 
 env:
-  "S3_BUCKET_NAME": "fuelingphp-laravel-bucket"
+  "S3_BUCKET_NAME": "virta-bucket"
   "EBS_APPLICATION_NAME": "fuelingphp-laravel-prod"
   "EBS_ENVIRONMENT_NAME": "Fuelingphplaravelprod-env"
   "AWS_REGION": "us-east-1"
@@ -23,3 +23,6 @@ jobs:
   steps:
       - name: Clone the repository
       - uses: actions/checkout@v3
+      
+      - name: Zip the repository
+        run: zip -r ${{env.DEPLOY_PACKAGE_NAME}} ./ -x *.git*
