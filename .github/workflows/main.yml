@@ -1,12 +1,25 @@
-name: CI
+name: fuelingphp-laravel-cd
 
+env:
+  "S3_BUCKET_NAME": "fuelingphp-laravel-bucket"
+  "EBS_APPLICATION_NAME": "fuelingphp-laravel-prod"
+  "EBS_ENVIRONMENT_NAME": "Fuelingphplaravelprod-env"
+  "AWS_REGION": "us-east-1"
+  "DEPLOY_PACKAGE_NAME": "laravel-app-${{github.sha}}.zip"
+  
 on:
- push:
-   branches: [ master ]
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+  workflow_dispatch:
 
 jobs:
- deploy:
-   runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-   steps:
-     - uses: actions/checkout@v2
+  steps:
+      - name: Clone the repository
+      - uses: actions/checkout@v3
