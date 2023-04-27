@@ -13,3 +13,5 @@ Rest-API implementation for Virta's electric vehicle charging station management
 This projects uses Laravel Sail package, a light-weight command-line interface for interacting with Laravel's default Docker development environment.
 - To start all containers run ./vendor/bin/sail up.
   - [Click here for more details about how to use Laravel Sail](https://laravel.com/docs/10.x/sail).
+
+The app is deployed on an AWS EC2 instance and this is the ip: http://18.198.50.248
